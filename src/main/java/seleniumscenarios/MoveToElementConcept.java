@@ -44,7 +44,7 @@ public class MoveToElementConcept {
 		
 		By parentMenu = By.xpath("//a[text()='Resources']");
 		By childMenu = By.linkText("eBooks");
-		twoLevelMenuHandling(parentMenu, childMenu);
+		multiLevelMenuHandling(parentMenu, childMenu);
 		
 			
 		// NOTE:  REMEMBER - Actions class object takes driver reference as the parameter but Select class object
@@ -82,9 +82,9 @@ public class MoveToElementConcept {
 		return driver.findElement(locator);
 	}
 	
-	// Generic method to mouse over the main/level1 menu item
-	// and then click on the level2 sub-menu item
-	public static void twoLevelMenuHandling(By level1MenuLocator,By level2MenuLocator ) throws InterruptedException {
+	// Generic method to handle exactly 2 level menus like header navigation
+	// and perform actions like click, mouse hover the sub-menu links etc.
+	public static void multiLevelMenuHandling(By level1MenuLocator,By level2MenuLocator ) throws InterruptedException {
 		Actions act = new Actions(driver);
 		act.moveToElement(getElement(level1MenuLocator)).perform();
 		Thread.sleep(1500);

@@ -20,11 +20,13 @@ public class ElementUtil {
 	// sendKeys, drag and drop etc.
 
 	private WebDriver driver;
+	private Actions act;
 
 	public ElementUtil(WebDriver driver) { // created constructor of this class
 											// to supply the driver value
 											// to the methods created below
 		this.driver = driver;
+		this.act = new Actions(driver);
 	}
 
 	// Generic function to find an element
@@ -77,6 +79,11 @@ public class ElementUtil {
 		String eleText = getElement(locator).getText();
 		System.out.println("Element text is ====> " + eleText);
 		return eleText;
+	}
+
+	// Generic method to create web element using Link's text
+	public WebElement getLinkElementByText(String linkText) {
+		return driver.findElement(By.linkText(linkText));
 	}
 
 	// Generic method to check whether an element is displayed on a web page or not
@@ -279,7 +286,6 @@ public class ElementUtil {
 	// Generic method to right click on an item , open a context menu
 	// and click on any of the menu items
 	public void clickOnRightClickMenuItem(By contextMenuLocator, String menuItemValue) {
-		Actions act = new Actions(driver);
 		act.contextClick(getElement(contextMenuLocator)).perform();
 		By menuItemLocator = By.xpath("//*[text()='" + menuItemValue + "']");
 		// We are using * instead of htmltag
@@ -293,12 +299,34 @@ public class ElementUtil {
 		doClick(menuItemLocator);
 	}
 
-	// Generic method to mouse over the main/level1 menu item
-	// and then click on the level2 sub-menu item
-	public void twoLevelMenuHandling(By level1MenuLocator, By level2MenuLocator) throws InterruptedException {
-		Actions act = new Actions(driver);
+	// Generic method to handle exactly 2 level menus like header navigation
+	// and perform actions like click, mouse hover the sub-menu links etc.
+	public void multiLevelMenuHandling(By level1MenuLocator, By level2MenuLocator) throws InterruptedException {
 		act.moveToElement(getElement(level1MenuLocator)).perform();
 		Thread.sleep(1500);
 		doClick(level2MenuLocator);
+	}
+
+	// Generic method to handle exactly 4 level menus like header navigation
+	// and perform actions like click, mouse hover the sub-menu links etc.
+	public void multiLevelMenuHandling(By level1Locator, String level2, String level3, String level4)
+			throws InterruptedException {
+		getElement(level1Locator).click();
+		Thread.sleep(1500);
+		act.moveToElement(getLinkElementByText(level2)).perform();
+		Thread.sleep(1500);
+		act.moveToElement(getLinkElementByText(level3)).perform();
+		Thread.sleep(1500);
+		getLinkElementByText(level4).click();
+	}
+
+	// Generic method to handle exactly 3 level menus like header navigation
+	// and perform actions like click, mouse hover the sub-menu links etc.
+	public void multiLevelMenuHandling(By level1Locator, String level2, String level3) throws InterruptedException {
+		getElement(level1Locator).click();
+		Thread.sleep(1500);
+		act.moveToElement(getLinkElementByText(level2)).perform();
+		Thread.sleep(1500);
+		getLinkElementByText(level3).click();
 	}
 }
