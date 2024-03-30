@@ -283,6 +283,16 @@ public class ElementUtil {
 
 	// ************************** Actions Utils ***************************//
 
+	// Generic method to click on an element using actions class
+	public void doActionsClick(By locator) {
+		act.click(getElement(locator)).perform();
+	}
+
+	// Generic method to enter value in an I/P field using actions class
+	public void doActionsSendKeys(By locator, String keys) {
+		act.sendKeys(getElement(locator), keys).perform();
+	}
+
 	// Generic method to right click on an item , open a context menu
 	// and click on any of the menu items
 	public void clickOnRightClickMenuItem(By contextMenuLocator, String menuItemValue) {
@@ -329,4 +339,5 @@ public class ElementUtil {
 		Thread.sleep(1500);
 		getLinkElementByText(level3).click();
 	}
+
 }
