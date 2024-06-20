@@ -1,14 +1,23 @@
 package seleniumscenarios;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoAlertPresentException;
+import org.openqa.selenium.NoSuchFrameException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import customexception.FrameWorkException;
 
@@ -195,6 +204,21 @@ public class ElementUtil {
 		}
 	}
 
+	// Generic function to find whether an element is
+	// mandatory on a web page or not
+	public boolean checkElementIsMandatory(String elementLabel) {
+		String script = "return window.getComputedStyle(document" + ".querySelector(\"label[for='input-" + elementLabel
+				+ "']\"),'::before')" + ".getPropertyValue('content')";
+
+		JavascriptExecutor jse = (JavascriptExecutor) driver;
+		String mandatoryStarText = jse.executeScript(script).toString();
+		System.out.println(mandatoryStarText);
+		if (mandatoryStarText.contains("*")) {
+			return true;
+		}
+		return false;
+	}
+
 	// ************************* Drop Down Utils **************************//
 
 	// Generic custom function to select a value from select drop-down using index
@@ -340,4 +364,458 @@ public class ElementUtil {
 		getLinkElementByText(level3).click();
 	}
 
+	// ********************************** WAIT Utils
+	// ************************************//
+
+	/**
+	 * Generic function to wait for an element based on if its present in the HTML
+	 * code (DOM) of a page or not, irrespective of whether its visible on the page
+	 * or not
+	 * 
+	 * @param locator
+	 * @param timeOut
+	 * @return WebElement
+	 */
+	public WebElement waitForElementPresence(By locator, int timeOut) {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeOut));
+		return wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+	}
+
+	/**
+	 * Generic function to wait for an element based on if its present in the HTML
+	 * code (DOM) of a page or not, irrespective of whether its visible on the page
+	 * or not.It will wait till the waiting timeout and keep on trying to locate the
+	 * element after the time interval given as pollingTime.
+	 * 
+	 * @param locator
+	 * @param timeOut
+	 * @param pollingTime
+	 * @return WebElement
+	 */
+	public WebElement waitForElementPresence(By locator, int timeOut, int pollingTime) {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeOut), Duration.ofSeconds(pollingTime));
+		return wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+	}
+
+	/**
+	 * Generic function to wait for an element based on if its visible on the page
+	 * or not. Visible on page means the element is not only displayed on the page
+	 * but also have a height and width should be greater than 0.
+	 * 
+	 * @param locator
+	 * @param timeOut
+	 * @return WebElement
+	 */
+	public WebElement waitForElementVisible(By locator, int timeOut) {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeOut));
+		return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+	}
+
+	/**
+	 * Generic function to wait for an element based on if its visible on the page
+	 * or not. It will wait till the waiting timeout and keep on trying to locate
+	 * the element after the time interval given as pollingTime. Visible on page
+	 * means the element is not only displayed on the page but also have a height
+	 * and width should be greater than 0.
+	 * 
+	 * @param locator
+	 * @param timeOut
+	 * @param pollingTime
+	 * @return WebElement to be located
+	 */
+	public WebElement waitForElementVisible(By locator, int timeOut, int pollingTime) {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeOut), Duration.ofSeconds(pollingTime));
+		return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+	}
+
+	/**
+	 * Generic method to wait for some part of the right title to appear and return
+	 * it
+	 * 
+	 * @param partOfTitle
+	 * @param timeOut
+	 * @return String Title
+	 */
+
+	public String waitForTitleContains(String partOfTitle, int timeOut) {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeOut));
+		try {
+			if (wait.until(ExpectedConditions.titleContains(partOfTitle))) {
+				return driver.getTitle();
+			} else {
+				System.out.println(partOfTitle + " title value is not present......");
+				return null;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(partOfTitle + " title value is not present......");
+			return null;
+		}
+	}
+
+	/**
+	 * Generic method to wait for whole part of the right title to appear and return
+	 * it
+	 * 
+	 * @param titleValue
+	 * @param timeOut
+	 * @return String Title
+	 */
+	public String waitForTitleIs(String titleValue, int timeOut) {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeOut));
+		try {
+			if (wait.until(ExpectedConditions.titleIs(titleValue))) {
+				return driver.getTitle();
+			} else {
+				System.out.println(titleValue + " title value is not present......");
+				return null;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(titleValue + " title value is not present......");
+			return null;
+		}
+	}
+
+	/**
+	 * Generic method to wait for some part of the right title to appear and return
+	 * it
+	 * 
+	 * @param partOfUrl
+	 * @param timeOut
+	 * @return String URL
+	 */
+	public String waitForURLContains(String partOfUrl, int timeOut) {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeOut));
+		try {
+			if (wait.until(ExpectedConditions.urlContains(partOfUrl))) {
+				return driver.getCurrentUrl();
+			} else {
+				System.out.println(partOfUrl + " URL value is not present......");
+				return null;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(partOfUrl + " URL value is not present......");
+			return null;
+		}
+	}
+
+	/**
+	 * Generic method to wait for whole part of the right title to appear and return
+	 * it
+	 * 
+	 * @param urlValue
+	 * @param timeOut
+	 * @return String URL
+	 */
+	public String waitForURLIs(String urlValue, int timeOut) {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeOut));
+		try {
+			if (wait.until(ExpectedConditions.urlToBe(urlValue))) {
+				return driver.getCurrentUrl();
+			} else {
+				System.out.println(urlValue + " URL value is not present......");
+				return null;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(urlValue + " URL value is not present......");
+			return null;
+		}
+	}
+
+	/**
+	 * Generic method to wait for JS Alerts. It also creates, returns and switches
+	 * to the alert automatically
+	 * 
+	 * @param timeOut
+	 * @return Alert class type reference
+	 */
+	public Alert waitForJsAlert(int timeOut) {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeOut));
+		return wait.until(ExpectedConditions.alertIsPresent());
+	}
+
+	/**
+	 * Generic method to check if the number of browser window pop-ups expected to
+	 * be opened after clicking a link are correct and actually opened or not
+	 * 
+	 * @param timeOut
+	 * @param numberOfWindowsToBe
+	 * @return true or false based on if the number of windows opened are matching
+	 *         the expected number of windows to be opened or not.
+	 */
+	public boolean waitForNumberOfBrowserWindows(int timeOut, int numberOfWindowsToBe) {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeOut));
+		return wait.until(ExpectedConditions.numberOfWindowsToBe(numberOfWindowsToBe));
+	}
+
+	/**
+	 * Generic method to wait for a frame element using its By locator value. This
+	 * method also switches automatically to the frame if found
+	 * 
+	 * @param frameLocator
+	 * @param timeOut
+	 * @return nothing
+	 */
+	public void waitForFrameByLocator(By frameLocator, int timeOut) {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeOut));
+		wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(frameLocator));
+	}
+
+	/**
+	 * Generic method to wait for a frame element using its integer index value.
+	 * This method also switches automatically to the frame if found
+	 * 
+	 * @param frameIndex
+	 * @param timeOut
+	 * @return nothing
+	 */
+	public void waitForFrameByIndex(int frameIndex, int timeOut) {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeOut));
+		wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(frameIndex));
+	}
+
+	/**
+	 * Generic method to wait for a frame element using its string name or id value.
+	 * This method also switches automatically to the frame if found
+	 * 
+	 * @param FrameNameorId
+	 * @param timeOut
+	 * @return nothing
+	 */
+	public void waitForFrameByFrameNameorId(String frameNameorId, int timeOut) {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeOut));
+		wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(frameNameorId));
+	}
+
+	/**
+	 * Generic method to wait for a frame element using its WebElement value. This
+	 * method also switches automatically to the frame if found
+	 * 
+	 * @param frameElement
+	 * @param timeOut
+	 * @return nothing
+	 */
+	public void waitForFrameByFrameElement(WebElement frameElement, int timeOut) {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeOut));
+		wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(frameElement));
+	}
+
+	/**
+	 * Generic function to wait for AT LEAST ONE web element on a web page based on
+	 * if it is actually visible in a List on the web page or not. If it is there
+	 * then only this method will return the complete list of web elements
+	 * 
+	 * @param locator
+	 * @param timeOut
+	 * @return List of WebElements
+	 */
+	public List<WebElement> waitForElementsPresence(By locator, int timeOut) {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeOut));
+		return wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(locator));
+	}
+
+	/**
+	 * Generic function to wait for ALL the web elements on a web page based on if
+	 * they ALL are present in a List in the HTML code (DOM) of a page as well as
+	 * its visible on the page. If it is there then only this method will return the
+	 * complete list of elements. Visibility means the elements are not only visible
+	 * on the page but also have a height and width Greater than 0.
+	 * 
+	 * @param locator
+	 * @param timeOut
+	 * @return List of WebElements
+	 */
+	public List<WebElement> waitForElementsVisible(By locator, int timeOut) {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeOut));
+		return wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(locator));
+	}
+
+	/**
+	 * Generic method to wait for an element to be visible as well as enabled on a
+	 * web page and then click on it once it is visible and click-able.
+	 * 
+	 * @param locator
+	 * @param timeOut
+	 * @return Nothing
+	 */
+	public void clickElementWhenReady(By locator, int timeOut) {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeOut));
+		wait.until(ExpectedConditions.elementToBeClickable(locator)).click();
+
+	}
+
+	// ******************************** FluentWait
+	// Utils***********************************//
+
+	/**
+	 * Generic function to wait for an element using Fluent Wait mechanism based on
+	 * if its present in the HTML code (DOM) of a page or not, irrespective of
+	 * whether its visible on the page or not.It will wait till the waiting timeout
+	 * and keep on trying to locate the element after the time interval given as
+	 * pollingTime.
+	 * 
+	 * @param locator
+	 * @param timeOut
+	 * @param pollingTime
+	 * @return Webelement to perform some action
+	 */
+	public WebElement waitForElementPresenceWithFluentWait(By locator, int timeOut, int pollingTime) {
+		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(Duration.ofSeconds(timeOut))
+				.pollingEvery(Duration.ofSeconds(pollingTime)).ignoring(NoSuchElementException.class)
+				.withMessage("-----time out is done.....element is not found....." + locator);
+		return wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+	}
+
+	/**
+	 * Generic function to wait for an element using Fluent Wait mechanism based on
+	 * if its visible on the page or not. It will wait till the waiting timeout and
+	 * keep on trying to locate the element after the time interval given as
+	 * pollingTime. Visible on page means the element is not only displayed on the
+	 * page but also have a height and width should be greater than 0.
+	 * 
+	 * @param locator
+	 * @param timeOut
+	 * @param pollingTime
+	 * @return Webelement to perform some action
+	 */
+	public WebElement waitForElementVisibleWithFluentWait(By locator, int timeOut, int pollingTime) {
+		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(Duration.ofSeconds(10))
+				.pollingEvery(Duration.ofSeconds(2)).ignoring(NoSuchElementException.class)
+				.withMessage("-----time out is done.....element is not found....." + locator);
+		return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+	}
+
+	/**
+	 * Generic method to wait for JS Alerts using Fluent Wait mechanism. It will
+	 * wait till the waiting timeout and keep on trying to locate the element after
+	 * the time interval given as pollingTime. It also creates, returns and switches
+	 * to the alert automatically
+	 * 
+	 * @param timeOut
+	 * @param pollingTime
+	 * @return Alert type reference to perform some action
+	 */
+	public Alert waitForJsAlertWithFluentWait(int timeOut, int pollingTime) {
+		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(Duration.ofSeconds(timeOut))
+				.pollingEvery(Duration.ofSeconds(pollingTime)).ignoring(NoAlertPresentException.class)
+				// Here we will ignore NoAlertPresentException instead of NoSuchElementException
+				// because
+				// when Alert is not present on a page and we are locating it we will get
+				// NoAlertPresentException not NoSuchElementException
+				.withMessage("-----time out is done.....JS Alert is not found.....");
+		return wait.until(ExpectedConditions.alertIsPresent());
+	}
+
+	/**
+	 * Generic method to wait for a frame element using Fluent Wait Mechanism based
+	 * on its string name or id value. This method also switches automatically to
+	 * the frame if found
+	 * 
+	 * @param FrameNameorId
+	 * @param timeOut
+	 * @param pollingTime
+	 * @return nothing
+	 */
+	public void waitForFrameWithFluentWait(String frameNameorId, int timeOut, int pollingTime) {
+		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(Duration.ofSeconds(timeOut))
+				.pollingEvery(Duration.ofSeconds(pollingTime)).ignoring(NoSuchFrameException.class)
+				.withMessage("-----time out is done...Frame is not found...with name or id: " + frameNameorId);
+		wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(frameNameorId));
+	}
+
+	// Generic method to wait for an input web element using Fluent Wait
+	// Mechanism and enter value in it
+	public void waitForElementAndEnterValue(By locator, int timeOut, int pollingTime, String value) {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeOut));
+		wait.pollingEvery(Duration.ofSeconds(pollingTime)).ignoring(NoSuchFrameException.class)
+				.withMessage("TimeOut is done...Element not found..." + locator)
+				.until(ExpectedConditions.visibilityOfElementLocated(locator)).sendKeys(value);
+	}
+
+	// Generic method to wait for a web element using Fluent Wait
+	// Mechanism and click on it
+	public void waitForElementAndClick(By locator, int timeOut, int pollingTime) {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeOut));
+		wait.pollingEvery(Duration.ofSeconds(pollingTime)).ignoring(NoSuchFrameException.class)
+				.withMessage("TimeOut is done...Element not found..." + locator)
+				.until(ExpectedConditions.visibilityOfElementLocated(locator)).click();
+	}
+	
+	//**************** Custom Wait *******************//	
+
+	// Generic method implementing Custom Fluent Wait like
+	// mechanism to wait for an element and perform action
+	// if found within the waiting time limit else throw exception
+	// Default polling time is 500ms
+	public WebElement retryingElement(By locator, int timeOut) {
+
+		WebElement element = null; // Default value of an element will be null as it's
+		// non-primitive type.
+
+		int attempts = 0; // Variable to track how many attempts / retries
+		// are performed while locating an element.
+
+		while (attempts < timeOut) {
+			try { // try for the element. If it is found in the first
+					// attempt only then break try-catch and the loop in turn
+					// else go to catch block and handle it accordingly.
+
+				element = getElement(locator); // if element is immediately available here
+				// then below line will be printed and loop will be break BUT if
+				// element is not available in first attempt then this line
+				// will throw NoSuchElementException. To handle that we will use try-catch
+				// mechanism
+				// and enclose above and below lines in try-catch blocks.
+				System.out.println("Element is found...." + locator + " in attempt" + attempts);
+				break;
+			} catch (NoSuchElementException e) {
+				System.out.println("Element is not found...." + locator + " in attempt" + attempts);
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+				attempts++;
+			}
+
+		}
+		if (element == null) {
+			System.out.println("Element is not found...tried for" + timeOut + " secs " + " with the interval of " + 500 + " milli secs ");
+		}
+		return element;
+	}
+
+	// Generic method implementing Custom Fluent Wait like
+	// mechanism to wait for an element and perform action
+	// if found within the waiting time limit else throw exception
+	// User can give their own custom pollingTime in this method
+	public WebElement retryingElement(By locator, int timeOut, int pollingTime) {
+
+		WebElement element = null; 
+		int attempts = 0; 
+		while (attempts < timeOut) {
+			try { 
+
+				element = getElement(locator);
+				System.out.println("Element is found...." + locator + " in attempt" + attempts);
+				break;
+			} catch (NoSuchElementException e) {
+				System.out.println("Element is not found...." + locator + " in attempt" + attempts);
+				try {
+					Thread.sleep(pollingTime);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+				attempts++;
+			}
+
+		}
+		if (element == null) {
+			System.out.println("Element is not found...tried for" + timeOut + " secs " + " with the interval of " + pollingTime + " millisecs ");
+		}
+		return element;
+	}
 }

@@ -15,6 +15,15 @@ public class SelectDropDownHandle {
 	// We use Select class of selenium library
 	// to handle these drop-downs.
 	
+	// IMPORTANT : Bear in mind whenever you are
+	// using select class for handling drop-downs
+	// ALWAYS provide the Webelement for the SELECT
+	// TAG ONLY which is used to create the drop-down.
+	// DO NOT pass the locator which returns the list of
+	// all options in the drop-down because
+	// Select class constructor takes ONLY WEBELEMENT as the argument
+	// NOT LIST of WebElements
+	
 	static WebDriver driver;
 
 	public static void main(String[] args) throws InterruptedException {
