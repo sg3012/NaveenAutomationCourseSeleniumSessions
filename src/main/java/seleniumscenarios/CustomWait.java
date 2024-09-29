@@ -43,7 +43,6 @@ public class CustomWait {
 		return driver.findElement(locator);
 
 	}
-
 	
 	// Generic method implementing Custom Fluent Wait like
 	// mechanism to wait for an element and perform action

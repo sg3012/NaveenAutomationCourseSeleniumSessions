@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+
+<!-- 1. This XML file will run all the tests on Chrome browser  -->
+
+<suite name="Open Cart App Test Chrome Regression suite" thread-count="3"
+	parallel="tests" verbose="4">
+
+	<test name="Google Test">
+		<parameter name="browser" value="chrome"></parameter>
+		<classes>
+			<class name="mytests.GoogleTest" />
+		</classes>
+	</test>
+
+	<test name="Open Cart Test">
+		<parameter name="browser" value="chrome"></parameter>
+		<classes>
+			<class name="mytests.OpenCartTest" />
+		</classes>
+	</test>
+
+	<test name="Orange HRM Test">
+		<parameter name="browser" value="chrome"></parameter>
+		<classes>
+			<class name="mytests.OrangeHRMTest" />
+		</classes>
+	</test>
+</suite>

@@ -15,8 +15,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.21</maven.compiler.source>
-		<maven.compiler.target>1.21</maven.compiler.target>
+		<maven.compiler.source>1.22</maven.compiler.source>
+		<maven.compiler.target>1.22</maven.compiler.target>
 	</properties>
 
 	<dependencies>
@@ -24,6 +24,13 @@
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-java</artifactId>
 			<version>4.11.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>7.10.1</version>
+			<scope>test</scope>
 		</dependency>
 
 	</dependencies>

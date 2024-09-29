@@ -209,7 +209,7 @@ public class JavaScriptUtil {
 		}
 	}
 	
-	// USE CASES OF DRAW BORDER AN ELEMENT:
+	// USE CASES OF DRAW BORDER OVER AN ELEMENT:
 	// We can use this feature when a test is failed and we want to
 	// take a screenshot highlighting the element which is
 	// causing the test to failed.

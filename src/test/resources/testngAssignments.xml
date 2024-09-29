@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+
+<suite name="TestNG Regression Suite" thread-count="3" parallel = "tests" verbose="4">
+
+	<test name="Open Cart  Login Test">
+		<classes>
+			<class
+				name="testngassignments.myassignmenttests.OpenCartLoginTest" />
+		</classes>
+	</test>
+
+	<test name="Open Cart  Search Product Test">
+		<classes>
+			<class
+				name="testngassignments.myassignmenttests.OpenCartSearchProductTest" />
+		</classes>
+	</test>
+
+	<test name="Open Cart  Product Details Test">
+		<classes>
+			<class
+				name="testngassignments.myassignmenttests.OpenCartProductDetailsTest" />
+		</classes>
+	</test>
+
+</suite>

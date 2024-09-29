@@ -10,6 +10,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.NoSuchFrameException;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -364,8 +365,7 @@ public class ElementUtil {
 		getLinkElementByText(level3).click();
 	}
 
-	// ********************************** WAIT Utils
-	// ************************************//
+	// ********************* WAIT Utils************************//
 
 	/**
 	 * Generic function to wait for an element based on if its present in the HTML
@@ -647,8 +647,7 @@ public class ElementUtil {
 
 	}
 
-	// ******************************** FluentWait
-	// Utils***********************************//
+	// ********************** FluentWait Utils*****************************//
 
 	/**
 	 * Generic function to wait for an element using Fluent Wait mechanism based on
@@ -664,7 +663,12 @@ public class ElementUtil {
 	 */
 	public WebElement waitForElementPresenceWithFluentWait(By locator, int timeOut, int pollingTime) {
 		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(Duration.ofSeconds(timeOut))
-				.pollingEvery(Duration.ofSeconds(pollingTime)).ignoring(NoSuchElementException.class)
+				.pollingEvery(Duration.ofSeconds(pollingTime))
+				.ignoring(NoSuchElementException.class)
+				.ignoring(StaleElementReferenceException.class) // ignoring
+				// staleelementrefexception in case the page refreshes
+				// and element becomes stale. Selenium will ignore the
+				// exception, locate and recreate the element again automatically.
 				.withMessage("-----time out is done.....element is not found....." + locator);
 		return wait.until(ExpectedConditions.presenceOfElementLocated(locator));
 	}
@@ -683,7 +687,9 @@ public class ElementUtil {
 	 */
 	public WebElement waitForElementVisibleWithFluentWait(By locator, int timeOut, int pollingTime) {
 		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(Duration.ofSeconds(10))
-				.pollingEvery(Duration.ofSeconds(2)).ignoring(NoSuchElementException.class)
+				.pollingEvery(Duration.ofSeconds(2))
+				.ignoring(NoSuchElementException.class)
+				.ignoring(StaleElementReferenceException.class)
 				.withMessage("-----time out is done.....element is not found....." + locator);
 		return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
 	}
@@ -743,8 +749,8 @@ public class ElementUtil {
 				.withMessage("TimeOut is done...Element not found..." + locator)
 				.until(ExpectedConditions.visibilityOfElementLocated(locator)).click();
 	}
-	
-	//**************** Custom Wait *******************//	
+
+	// **************** Custom Wait *******************//
 
 	// Generic method implementing Custom Fluent Wait like
 	// mechanism to wait for an element and perform action
@@ -783,7 +789,8 @@ public class ElementUtil {
 
 		}
 		if (element == null) {
-			System.out.println("Element is not found...tried for" + timeOut + " secs " + " with the interval of " + 500 + " milli secs ");
+			System.out.println("Element is not found...tried for" + timeOut + " secs " + " with the interval of " + 500
+					+ " milli secs ");
 		}
 		return element;
 	}
@@ -794,10 +801,10 @@ public class ElementUtil {
 	// User can give their own custom pollingTime in this method
 	public WebElement retryingElement(By locator, int timeOut, int pollingTime) {
 
-		WebElement element = null; 
-		int attempts = 0; 
+		WebElement element = null;
+		int attempts = 0;
 		while (attempts < timeOut) {
-			try { 
+			try {
 
 				element = getElement(locator);
 				System.out.println("Element is found...." + locator + " in attempt" + attempts);
@@ -814,8 +821,26 @@ public class ElementUtil {
 
 		}
 		if (element == null) {
-			System.out.println("Element is not found...tried for" + timeOut + " secs " + " with the interval of " + pollingTime + " millisecs ");
+			System.out.println("Element is not found...tried for" + timeOut + " secs " + " with the interval of "
+					+ pollingTime + " millisecs ");
 		}
 		return element;
+	}
+
+	// Generic function to check if the document's / page's ready state is Complete
+	// (Meaning DOM and all it's sub-resources are completely loaded) or not. 
+	// And if it is then return true otherwise return false
+	public boolean isPageLoaded(int timeOut) {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeOut));
+		String flag = wait.until(ExpectedConditions
+				.jsReturnsValue("return document.readyState == 'complete'"))
+					.toString(); // The JS
+		// written as the parameter of jsReturnsValue method will return either true or
+		// false. We have applied
+		// toString at the end of the statement because the until method will return a
+		// JAVAScript Object
+		// formatted data (true or false)
+
+		return Boolean.parseBoolean(flag);
 	}
 }

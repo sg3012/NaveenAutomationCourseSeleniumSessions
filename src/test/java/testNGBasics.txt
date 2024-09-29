@@ -1,0 +1,58 @@
+--> TestNG is a UNIT testing Framework implemented in JAVA.
+
+--> We could assert/validate our test steps with the help of TestNG
+       which we can't do with Selenium alone.
+       
+--> TestNG is implemented via annotations like @After, @Before, @Test etc.
+
+--> With the help of testNG we could generated some test reports highlighting which tests passed, failed etc.
+
+--> TestNG could also define the PRIORITY of some of the test cases to be run before some other test cases.
+
+--> TestNG also provided an amazing feature called DATAPROVIDER with the help of which we could 
+       perform Data driven testing and also run our tests using various sets of data.  
+       
+--> Apart from that TestNG also has some core features like Exception handling, Dependency creation among test cases, 
+      Annotations etc.
+      
+ --> TestNG also has have a feature called LISTENERS which are used to create reports while the tests are running.
+        There are also some other Vendors for creating some fancy test reports like Extent reports, Allure reports etc.
+        which use  TestNG listeners internally to create these reports.
+        
+ --> It also provides a feature called Test Runners that created an xml file with name "testng.xml". The runner
+       file acts as a trigger or test suite to run all or some test cases created in our test steps files. With the help of
+       testng runner files we could do the following:
+       - ARRANGE the test cases
+       - PARALLEL testing -> Which Selenium DOESN'T provide and it is the Biggest Advantage of TestNG or
+          we could say PURPOSE of using TestNG with Selenium.
+       - Parameters - Using testNG we could also parameterize our test cases which cannot be using
+          Selenium alone.  
+      
+--> RETRY logic : Retry logic is an important feature of testNG using which we could retry the failed test cases.
+
+--> Different annotations in TestNG
+
+--> TestNG has NO UI / LOOK and FEEL. It's features could ONLY be used using PROGRAMMING.
+
+--> TestNG comes with 2 MAJOR components:
+      TestNG JAR -- Used to only write the test cases using annotations.
+      TestNG plug-in -- Used to only RUN the test cases using GUI of the text editor. So, if we only have the JAR file
+      and no plug-in then we couldn't run our tests using GUI. Also, the plug-in is used to generate
+      a test results report giving count of failed, passed, skipped tests in the console. So, it is very helpful
+      that we install the testNG plug-in also along with the JAR.
+      
+--> There are 2 scopes of the TestNG dependency we download from Maven and put it in pom.xml file:
+      - TEST - If we give this scope under the dependency , it means we have to write our test cases or testNG related code
+         (having testNG annotations) in src/test/java folder ONLY 
+      - COMPILE- If we give this scope under the dependency , it means we have to write our test cases or testNG related code
+         (having testNG annotations) in src/main/java folder ONLY 
+         NOTE:
+        - Scope meaning the <scope></scope> tag we use in the XML files or pom.xml file. 
+        -  Maven suggests to write your test cases/scripts or testNG code inside src/test/java folder only. That is why
+         the <scope> is defined as "TEST" in most of the real-time projects.
+
+
+
+
+
+
