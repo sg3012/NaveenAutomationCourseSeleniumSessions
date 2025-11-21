@@ -22,7 +22,7 @@ public class BrowserWindowHandleTogether {
 
 		String parentWindowID = driver.getWindowHandle();
 		// We are capturing the parent window ID
-		// in the above line of code because when we will
+		// in the above line of code in the beginning itself because when we will
 		// iterate through all the windows using the loop below
 		// and close them after doing our work, the loop
 		// will attempt to close the parent window as well (which we don't want).

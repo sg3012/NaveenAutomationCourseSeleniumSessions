@@ -50,6 +50,31 @@
         - Scope meaning the <scope></scope> tag we use in the XML files or pom.xml file. 
         -  Maven suggests to write your test cases/scripts or testNG code inside src/test/java folder only. That is why
          the <scope> is defined as "TEST" in most of the real-time projects.
+        
+--> Why do people give preference to data provider at the test level instead of the for loops to read
+test data?
+Ans: There are 2 advantages:
+1. The data provider continues to run the tests even when a test gets failed in between
+    thereby running all tests at once saving the user from overhead of running the
+    tests which might not have been executed if they would be run by using loops. Because 
+    loops halt the execution completely if a single test is failed in between which cancels the chance of
+    running those tests which might have been passed in the previous runs.
+ 2. Data provider generates the report for all tests at once. For e.g. if there are 100 tests
+ and 10 got failed it will generate a report of all 100 tests marking 90 passed
+ and 10 failed and the status of tests is given beside them instead of providing status 
+ to whole report. Whereas loops will generate the report till the point first test is failed thereby
+ increasing overhead of the number of executions. So, for 100 tests if 20 got failed loop
+ will generate report for only 80 tests and we have to run the tests again to see the result
+ of remaining 20 tests again and report execution in the previous run(s) will also be marked as
+ FAILED.
+ 
+ --> Suppose Dev has made some change in the login feature of an application
+ and I want to run the tests related to login using automation. Then what is the best
+ way to do it?
+ Ans: The best way to do it via maven commands. Use the following command instead
+ of going in the codebase and running the test(s):
+ mvn clean install -Dtest="<test-name>"
+ 
 
 
 
