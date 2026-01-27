@@ -23,7 +23,7 @@ public class StaleElementRefExceptionConcept {
 	// we have reinitialize the element once the DOM is refreshed.
 	// To avoid the frequency of this exception from coming in a real-time
 	// framework we use the By locator approach i.e., just create the element locators
-	// and create the actual only when needed to perform a user action
+	// and create the actual element only when needed to perform a user action
 	
 	// In which cases we get the StaleElementReferenceException?
 	// Ans: While page refresh, back/forward etc.
